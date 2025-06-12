@@ -6,4 +6,11 @@ public class KMPAlgorithm {
         // TODO: Implementar a lógica de busca
         return false;
     }
+
+    private static int[] computeLPSArray(String pat) {
+        int M = pat.length();
+        int[] lps = new int[M];
+        
+        return lps;
+    }
 }

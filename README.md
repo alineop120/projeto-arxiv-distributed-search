@@ -154,7 +154,7 @@ Projeto desenvolvido por estudantes da **Universidade Católica de Brasília (UC
 | *Ana Beatriz Cavalcante Amorim*        | UC23101592  | Cliente e Servidor A     | [@Anabamorim](https://github.com/Anabamorim) |
 | *Aline Oliveira de Pinho*              | UC23101158  | Servidor B e JSON utils  | [@alineop120](https://github.com/alineop120) |
 | *Cristiane Tamily de Menezes Carvalho* | UC10045998  | Servidor C e testes      | [@ctamilly](https://github.com/ctamilly)     |
-| *Mateus Tirulli Rozeti*                | UC12345678  | Implementação do KMP     | [@Rozeti](https://github.com/Rozeti)         |
+| *Mateus Tirulli Rozeti*                | UC23102270  | Implementação do KMP     | [@Rozeti](https://github.com/Rozeti)         |
 
 ---
 

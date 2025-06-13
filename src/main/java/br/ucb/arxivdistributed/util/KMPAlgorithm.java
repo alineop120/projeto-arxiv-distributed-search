@@ -1,5 +1,8 @@
 package br.ucb.arxivdistributed.util;
 
+/**
+ * Implementação do algoritmo Knuth-Morris-Pratt (KMP) para busca eficiente de padrão em texto.
+ */
 public class KMPAlgorithm {
 
     public static boolean contains(String txt, String pat) {
@@ -19,6 +22,12 @@ public class KMPAlgorithm {
 
             if (j == M) {
                 return true; // padrão encontrado
+            } else if (i < N && pat.charAt(j) != txt.charAt(i)) {
+                if (j != 0) {
+                    j = lps[j - 1];
+                } else {
+                    i++;
+                }
             }
         }
         return false; // padrão não encontrado

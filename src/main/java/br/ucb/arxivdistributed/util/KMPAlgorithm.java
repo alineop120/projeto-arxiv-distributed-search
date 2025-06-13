@@ -5,6 +5,10 @@ package br.ucb.arxivdistributed.util;
  */
 public class KMPAlgorithm {
 
+    /**
+     * Verifica se o padrão `pat` ocorre dentro do texto `txt`.
+     * Retorna true se encontrado, false caso contrário.
+     */
     public static boolean contains(String txt, String pat) {
         int M = pat.length();
         int N = txt.length();
@@ -33,10 +37,14 @@ public class KMPAlgorithm {
         return false; // padrão não encontrado
     }
 
+    /**
+     * Calcula o array LPS (Longest Prefix Suffix) usado pelo algoritmo KMP.
+     */
     private static int[] computeLPSArray(String pat) {
         int M = pat.length();
         int[] lps = new int[M];
-        int len = 0;
+        int len = 0; // comprimento do prefixo mais longo que é também sufixo
+
         lps[0] = 0;
         int i = 1;
 
@@ -54,6 +62,7 @@ public class KMPAlgorithm {
                 }
             }
         }
+
         return lps;
     }
 }

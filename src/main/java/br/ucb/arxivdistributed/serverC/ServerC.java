@@ -35,6 +35,37 @@ public class ServerC {
             executor.shutdown();
         }
     }
+    
+    private static void handleRequest(Socket socket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+            System.out.println("[INFO] Conectado ao Servidor A.");
+
+            String query = in.readLine();
+            if (query == null || query.isBlank()) {
+                out.println("[ERRO] Consulta inválida recebida.");
+                return;
+            }
+
+            System.out.println("[INFO] Realizando busca por: '" + query + "'");
+            String result = performSearch(query);
+            out.println(result);
+
+        } catch (IOException e) {
+            System.err.println("[ERRO] Comunicação com Servidor A falhou: " + e.getMessage());
+        } finally {
+            try {
+                if (!socket.isClosed()) {
+                    socket.close();
+                }
+            } catch (IOException e) {
+                System.err.println("[ERRO] Falha ao fechar o socket: " + e.getMessage());
+            }
+        }
+    }
+
+    
         
     }
 }

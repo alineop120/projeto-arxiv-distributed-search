@@ -78,5 +78,14 @@ public class ServerA {
         }
     }
 
+    private static String getResultFromFuture(Future<String> future, String serverName) {
+        try {
+            return future.get(30, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            System.err.println("[ERRO] Consulta ao servidor " + serverName + " falhou: " + e.getMessage());
+            return "[ERRO] Falha ao consultar servidor " + serverName + ".\n";
+        }
+    }
+
     
 }

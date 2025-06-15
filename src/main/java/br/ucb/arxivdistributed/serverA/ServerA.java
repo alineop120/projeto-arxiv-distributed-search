@@ -87,5 +87,25 @@ public class ServerA {
         }
     }
 
-    
+    private static String consultaServidor(String host, int port, String query) {
+        StringBuilder response = new StringBuilder();
+
+        try (Socket socket = new Socket(host, port);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+            out.println(query);
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line).append("\n");
+            }
+
+        } catch (IOException e) {
+            System.err.println("[ERRO] Falha ao conectar no servidor " + host + ":" + port + " - " + e.getMessage());
+            return "[ERRO] Não foi possível consultar o servidor " + host + ":" + port + "\n";
+        }
+
+        return response.toString();
+    }    
 }

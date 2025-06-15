@@ -1,6 +1,9 @@
 package br.ucb.arxivdistributed.serverC;
 
 import br.ucb.arxivdistributed.util.Config;
+import br.ucb.arxivdistributed.util.KMPAlgorithm;
+import br.ucb.arxivdistributed.util.SearchUtils;
+import org.json.JSONArray;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -65,7 +68,27 @@ public class ServerC {
         }
     }
 
-    
+    private static String performSearch(String query) {
+        StringBuilder results = new StringBuilder();
+        String lowerCaseQuery = query.toLowerCase();
+
+        try {
+            for (int i = 0; i < cachedData.length(); i++) {
+                var article = cachedData.getJSONObject(i);
+                String title = article.optString("title", "");
+                String summary = article.optString("abstract", "");
+
+                if (KMPAlgorithm.contains(title.toLowerCase(), lowerCaseQuery) ||
+                        KMPAlgorithm.contains(summary.toLowerCase(), lowerCaseQuery)) {
+                    results.append("Título: ").append(title).append("\nResumo: ").append(summary).append("\n\n");
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("[ERRO] Erro durante busca: " + e.getMessage());
+            return "[ERRO] Falha ao acessar os dados no servidor.\n";
+        }
+
+        return results.toString();
         
     }
 }

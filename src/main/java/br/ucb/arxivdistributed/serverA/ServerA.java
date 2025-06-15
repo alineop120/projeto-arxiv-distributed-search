@@ -1,6 +1,10 @@
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
+package br.ucb.arxivdistributed.serverA;
+
+import br.ucb.arxivdistributed.util.Config;
+
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.*;
 
 private static void handleClient(Socket clientSocket) {
     try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));

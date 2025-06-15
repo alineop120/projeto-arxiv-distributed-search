@@ -3,13 +3,10 @@ package br.ucb.arxivdistributed.client;
 import br.ucb.arxivdistributed.util.Config;
 import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException; // Import adicionado
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.net.UnknownHostException;
 
 public class SearchClient {
-    // ... (método main inalterado) ...
+
     public static void main(String[] args) {
         System.out.println("🔍 Sistema de Busca Distribuído - Cliente");
 
@@ -20,7 +17,7 @@ public class SearchClient {
             while ((query = userInput.readLine()) != null && !query.equalsIgnoreCase("sair")) {
                 if (query.isBlank()) {
                     System.out.println("⚠️ Consulta vazia! Por favor, digite um termo válido.");
-                    System.out.print("\nDigite uma nova palavra ou trecho para buscar (ou 'sair' para encerrar): ");
+                    System.out.print("\nDigite uma palavra ou trecho para buscar (ou 'sair' para encerrar): ");
                     continue;
                 }
                 
@@ -49,36 +46,11 @@ public class SearchClient {
             while ((line = in.readLine()) != null) {
                 responseBuilder.append(line).append("\n");
             }
-            String response = responseBuilder.toString().trim(); // Resposta real do servidor
+            String response = responseBuilder.toString().trim();
 
-            // A lógica de parse JSON antiga ainda está aqui
             System.out.println("\n✅ Busca finalizada.");
             System.out.println("------ RESULTADOS ENCONTRADOS ------");
-
-            if (response.isEmpty()) {
-                System.out.println("⚠️ Nenhuma resposta recebida do servidor.");
-            } else {
-                try {
-                    JSONObject respostaJson = new JSONObject(response);
-
-                    if (respostaJson.has("erro")) {
-                        System.out.println("❌ Erro: " + respostaJson.getString("erro"));
-                    } else if (respostaJson.has("mensagem")) {
-                        System.out.println(respostaJson.getString("mensagem"));
-                    }
-
-                    if (respostaJson.has("resultados")) {
-                        JSONArray resultados = respostaJson.getJSONArray("resultados");
-                        System.out.println("Total de resultados: " + resultados.length());
-                        for (int i = 0; i < resultados.length(); i++) {
-                           // ... (código de iteração JSON inalterado) ...
-                        }
-                    }
-                } catch (JSONException e) {
-                    System.out.println("⚠️ Resposta do servidor não está no formato JSON esperado. Exibindo resposta bruta:");
-                    System.out.println(response);
-                }
-            }
+            System.out.println(response.isEmpty() ? "⚠️ Nenhuma resposta recebida do servidor." : response);
             System.out.println("------------ FIM DA BUSCA ----------");
 
         } catch (UnknownHostException e) {

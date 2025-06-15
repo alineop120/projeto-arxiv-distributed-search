@@ -33,4 +33,31 @@ public class SearchClient {
         System.out.println("Cliente encerrado.");
     }
 
+    private static void processQuery(String query) {
+        try (Socket socket = new Socket(Config.SERVER_A_HOST, Config.SERVER_A_PORT);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
+            System.out.println("[INFO] Conectando ao servidor e enviando consulta...");
+            out.println(query);
+
+            StringBuilder responseBuilder = new StringBuilder();
+            String line;
+            while ((line = in.readLine()) != null) {
+                responseBuilder.append(line).append("\n");
+            }
+            String response = responseBuilder.toString().trim();
+
+            System.out.println("\n✅ Busca finalizada.");
+            System.out.println("------ RESULTADOS ENCONTRADOS ------");
+            System.out.println(response.isEmpty() ? "⚠️ Nenhuma resposta recebida do servidor." : response);
+            System.out.println("------------ FIM DA BUSCA ----------");
+
+        } catch (UnknownHostException e) {
+            System.err.println("[ERRO FATAL] Host do servidor não encontrado: " + Config.SERVER_A_HOST);
+        } catch (IOException e) {
+            System.err.println("[ERRO] Falha na comunicação com o servidor: " + e.getMessage());
+            System.err.println("Verifique se o Servidor A está em execução.");
+        }
+    }
 }

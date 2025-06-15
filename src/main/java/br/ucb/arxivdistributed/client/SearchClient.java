@@ -1,7 +1,9 @@
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
+package br.ucb.arxivdistributed.client;
 
+import br.ucb.arxivdistributed.util.Config;
+import java.io.*;
+import java.net.Socket;
+import java.net.UnknownHostException;
 
 String response = responseBuilder.toString().trim();
 

@@ -48,7 +48,6 @@ public class SearchClient {
             }
             String response = responseBuilder.toString().trim();
 
-            // Lógica de tratamento da resposta simplificada
             System.out.println("\n✅ Busca finalizada.");
             System.out.println("------ RESULTADOS ENCONTRADOS ------");
             System.out.println(response.isEmpty() ? "⚠️ Nenhuma resposta recebida do servidor." : response);

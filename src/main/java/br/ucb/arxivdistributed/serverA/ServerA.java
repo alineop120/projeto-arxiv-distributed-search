@@ -12,7 +12,25 @@ public class ServerA {
     private static final ExecutorService searchExecutor = Executors.newFixedThreadPool(2);
 
     public static void main(String[] args) {
-        
+        try (ServerSocket serverSocket = new ServerSocket(Config.SERVER_A_PORT)) {
+            System.out.println("Servidor A aguardando conexão na porta " + Config.SERVER_A_PORT + "...");
+
+            while (true) {
+                try {
+                    Socket clientSocket = serverSocket.accept();
+            
+                    clientExecutor.submit(() -> handleClient(clientSocket));
+                } catch (IOException e) {
+                    System.err.println("[ERRO] Falha ao aceitar conexão do cliente: " + e.getMessage());
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("[ERRO FATAL] Falha ao iniciar o Servidor A: " + e.getMessage());
+        } finally {
+            System.out.println("Encerrando Servidor A...");
+            clientExecutor.shutdown();
+            searchExecutor.shutdown();
+        } 
     }
 
     private static void handleClient(Socket clientSocket) {

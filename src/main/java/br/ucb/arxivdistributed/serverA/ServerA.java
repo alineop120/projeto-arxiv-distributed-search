@@ -1,71 +1,111 @@
-import org.json.JSONObject;
-import org.json.JSONArray;
-import org.json.JSONException;
+package br.ucb.arxivdistributed.serverA;
 
-private static void handleClient(Socket clientSocket) {
-    try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-         PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+import br.ucb.arxivdistributed.util.Config;
 
-        System.out.println("[INFO] Cliente conectado: " + clientSocket.getInetAddress());
+import java.io.*;
+import java.net.*;
+import java.util.concurrent.*;
 
-        String query = in.readLine();
-        if (query == null || query.isBlank()) {
-            System.out.println("[WARN] Consulta vazia ou conexão fechada pelo cliente.");
-            out.println(new JSONObject().put("erro", "Consulta inválida.").toString());
-            return;
-        }
+public class ServerA {
 
-        System.out.println("[INFO] Recebida consulta: '" + query + "'");
+    private static final ExecutorService clientExecutor = Executors.newCachedThreadPool();
+    private static final ExecutorService searchExecutor = Executors.newFixedThreadPool(2);
 
-        Future<String> futureB = searchExecutor.submit(() -> consultaServidor(Config.SERVER_B_HOST, Config.SERVER_B_PORT, query));
-        Future<String> futureC = searchExecutor.submit(() -> consultaServidor(Config.SERVER_C_HOST, Config.SERVER_C_PORT, query));
+    public static void main(String[] args) {
+        try (ServerSocket serverSocket = new ServerSocket(Config.SERVER_A_PORT)) {
+            System.out.println("Servidor A aguardando conexão na porta " + Config.SERVER_A_PORT + "...");
 
-        String resultadoB = getResultFromFuture(futureB, "B");
-        String resultadoC = getResultFromFuture(futureC, "C");
-
-        JSONObject respostaJson = new JSONObject();
-        JSONArray resultadosArray = new JSONArray();
-
-        // Processa o resultado do Servidor B
-        if (resultadoB != null && !resultadoB.trim().isEmpty() && !resultadoB.startsWith("[ERRO]")) {
-            try {
-                // Tenta interpretar como um objeto JSON
-                resultadosArray.put(new JSONObject(resultadoB));
-            } catch (JSONException e) {
-                // Se falhar, trata como texto simples e o encapsula em um JSON
-                resultadosArray.put(new JSONObject().put("dado", resultadoB.trim()));
-            }
-        }
-
-        // Processa o resultado do Servidor C
-        if (resultadoC != null && !resultadoC.trim().isEmpty() && !resultadoC.startsWith("[ERRO]")) {
-            try {
-                // Tenta interpretar como um objeto JSON
-                resultadosArray.put(new JSONObject(resultadoC));
-            } catch (JSONException e) {
-                // Se falhar, trata como texto simples e o encapsula em um JSON
-                resultadosArray.put(new JSONObject().put("dado", resultadoC.trim()));
-            }
-        }
-
-        respostaJson.put("resultados", resultadosArray);
-        respostaJson.put("total", resultadosArray.length());
-
-        if (resultadosArray.isEmpty()) {
-            respostaJson.put("mensagem", "⚠️ Nenhum resultado encontrado para a sua busca.");
-        }
-
-        out.println(respostaJson.toString());
-
-    } catch (IOException e) {
-        System.err.println("[ERRO] Comunicação com cliente falhou: " + e.getMessage());
-    } finally {
-        try {
-            if (!clientSocket.isClosed()) {
-                clientSocket.close();
+            while (true) {
+                try {
+                    Socket clientSocket = serverSocket.accept();
+            
+                    clientExecutor.submit(() -> handleClient(clientSocket));
+                } catch (IOException e) {
+                    System.err.println("[ERRO] Falha ao aceitar conexão do cliente: " + e.getMessage());
+                }
             }
         } catch (IOException e) {
-            System.err.println("[ERRO] Falha ao fechar o socket do cliente: " + e.getMessage());
+            System.err.println("[ERRO FATAL] Falha ao iniciar o Servidor A: " + e.getMessage());
+        } finally {
+            System.out.println("Encerrando Servidor A...");
+            clientExecutor.shutdown();
+            searchExecutor.shutdown();
+        } 
+    }
+
+    private static void handleClient(Socket clientSocket) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+             PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)) {
+
+            System.out.println("[INFO] Cliente conectado: " + clientSocket.getInetAddress());
+
+            String query = in.readLine();
+            if (query == null || query.isBlank()) {
+                System.out.println("[WARN] Consulta vazia ou conexão fechada pelo cliente.");
+                out.println("[ERRO] Consulta inválida.");
+                return;
+            }
+
+            System.out.println("[INFO] Recebida consulta: '" + query + "'");
+
+            Future<String> futureB = searchExecutor.submit(
+                () -> consultaServidor(Config.SERVER_B_HOST, Config.SERVER_B_PORT, query)
+            );
+            Future<String> futureC = searchExecutor.submit(
+                () -> consultaServidor(Config.SERVER_C_HOST, Config.SERVER_C_PORT, query)
+            );
+
+            String resultadoB = getResultFromFuture(futureB, "B");
+            String resultadoC = getResultFromFuture(futureC, "C");
+
+            String respostaFinal = (resultadoB.trim() + "\n" + resultadoC.trim()).trim();
+            if (respostaFinal.isBlank()) {
+                respostaFinal = "⚠️ Nenhum resultado encontrado para a sua busca.";
+            }
+
+            out.println(respostaFinal);
+
+        } catch (IOException e) {
+            System.err.println("[ERRO] Comunicação com cliente falhou: " + e.getMessage());
+        } finally {
+            try {
+                if (!clientSocket.isClosed()) {
+                    clientSocket.close();
+                }
+            } catch (IOException e) {
+                System.err.println("[ERRO] Falha ao fechar o socket do cliente: " + e.getMessage());
+            }
         }
     }
+
+    private static String getResultFromFuture(Future<String> future, String serverName) {
+        try {
+            return future.get(30, TimeUnit.SECONDS);
+        } catch (Exception e) {
+            System.err.println("[ERRO] Consulta ao servidor " + serverName + " falhou: " + e.getMessage());
+            return "[ERRO] Falha ao consultar servidor " + serverName + ".\n";
+        }
+    }
+
+    private static String consultaServidor(String host, int port, String query) {
+        StringBuilder response = new StringBuilder();
+
+        try (Socket socket = new Socket(host, port);
+             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true)) {
+
+            out.println(query);
+
+            String line;
+            while ((line = in.readLine()) != null) {
+                response.append(line).append("\n");
+            }
+
+        } catch (IOException e) {
+            System.err.println("[ERRO] Falha ao conectar no servidor " + host + ":" + port + " - " + e.getMessage());
+            return "[ERRO] Não foi possível consultar o servidor " + host + ":" + port + "\n";
+        }
+
+        return response.toString();
+    }    
 }

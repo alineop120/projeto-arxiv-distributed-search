@@ -56,7 +56,7 @@ Abaixo está o diagrama de comunicação do sistema:
 <!--
 ![arquitetura-sistema-busca-distribuida](./images/arquitetura-sistema-busca-distribuida.png)
 -->
-<img src="./images/arquitetura-sistema-busca-distribuida.png" alt="Arquitetura do Sistema" width="60%" />
+<img src="./documentacao/arquitetura-sistema.png" alt="Arquitetura do Sistema" width="60%" />
 
 ---
 
@@ -162,7 +162,7 @@ Projeto desenvolvido por estudantes da **Universidade Católica de Brasília (UC
 
 ## 📑 Relatório
 
-[Projeto Final - Relatório.pdf](..%2F..%2F..%2F..%2FDownloads%2FProjeto%20Final%20-%20Relat%C3%B3rio.pdf)
+[Projeto Final - Relatório](./documentacao/projeto-final-relatorio.pdf)
 
 ---
 

@@ -162,7 +162,7 @@ Projeto desenvolvido por estudantes da **Universidade Católica de Brasília (UC
 
 ## 📑 Relatório
 
-[Projeto Final - Relatório.pdf](..%2F..%2F..%2F..%2FDownloads%2FProjeto%20Final%20-%20Relat%C3%B3rio.pdf)
+[Projeto Final - Relatório](./documentacao/Projeto Final - Relatório.pdf)
 
 ---
 

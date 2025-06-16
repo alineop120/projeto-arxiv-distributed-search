@@ -18,7 +18,9 @@ Este projeto implementa um sistema de busca distribuído que consulta artigos ci
 - [📌 Exemplo de Consulta](#-exemplo-de-consulta)
 - [🛠️ Contribuições](#️-contribuições)
 - [👩‍💻 Autoria](#-autoria)
+- [📑 Relatório](#-relatório)
 - [📄 Licença](#-licença)
+
 
 ---
 
@@ -149,15 +151,23 @@ Sugestões, melhorias ou novas funcionalidades são bem-vindas. Crie um fork ou 
 
 Projeto desenvolvido por estudantes da **Universidade Católica de Brasília (UCB)** para a disciplina de Programação Concorrente e Distribuída.
 
-| Nome                                   | Matrícula   | Função no Projeto        | GitHub                                       |
-|----------------------------------------|-------------|--------------------------|----------------------------------------------|
-| *Ana Beatriz Cavalcante Amorim*        | UC23101592  | Cliente e Servidor A     | [@Anabamorim](https://github.com/Anabamorim) |
-| *Aline Oliveira de Pinho*              | UC23101158  | Servidor B e JSON utils  | [@alineop120](https://github.com/alineop120) |
-| *Cristiane Tamily de Menezes Carvalho* | UC10045998  | Servidor C e testes      | [@ctamilly](https://github.com/ctamilly)     |
-| *Mateus Tirulli Rozeti*                | UC23102270  | Implementação do KMP     | [@Rozeti](https://github.com/Rozeti)         |
+| Nome                                   | Matrícula  | Função no Projeto       | GitHub                                       |
+|----------------------------------------|------------|-------------------------|----------------------------------------------|
+| *Ana Beatriz Cavalcante Amorim*        | 2010024024 | Cliente e Servidor A    | [@Anabamorim](https://github.com/Anabamorim) |
+| *Aline Oliveira de Pinho*              | UC23101158 | Servidor B e JSON utils | [@alineop120](https://github.com/alineop120) |
+| *Cristiane Tamily de Menezes Carvalho* | UC10045998 | Servidor C e Config.    | [@ctamilly](https://github.com/ctamilly)     |
+| *Mateus Tirulli Rozeti*                | UC23102270 | Implementação do KMP    | [@Rozeti](https://github.com/Rozeti)         |
+
+---
+
+## 📑 Relatório
+
+[Projeto Final - Relatório.pdf](..%2F..%2F..%2F..%2FDownloads%2FProjeto%20Final%20-%20Relat%C3%B3rio.pdf)
 
 ---
 
 ## 📄 Licença
 
 Este projeto é de uso educacional e livre para modificações com atribuição.
+
+---
